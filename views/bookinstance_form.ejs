@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("partials/head"); %>
+  </head>
+  <body class="container-fluid">
+    <div class="row">
+      <div class="col-sm-2">
+        <header><%- include("partials/sidebar"); %></header>
+      </div>
+      <div class="col-sm-10">
+        <h1><%= title %></h1>
+        <form method="post" action="">
+          <div class="form-group">
+            <label for="book">Book: </label>
+            <select
+              id="book"
+              class="form-control"
+              type="select"
+              placeholder="Select book"
+              name="book"
+              required="true"
+            >
+              <% book_list.sort((a, b) => {let textA = a.title.toUpperCase();
+              let textB = b.title.toUpperCase(); return (textA < textB) ? -1 :
+              (textA > textB) ? 1 : 0;}); %> <% for (let i = 0; i <
+              book_list.length; i++) { %> <% const book = book_list[i]; %> <% if
+              (typeof book_instance !== 'undefined') { %> <% const sel =
+              (book_instance.book.toString() == book._id.toString()) ?
+              'selected' : false; %>
+              <option value="<%= book._id %>" selected="<%= sel %>">
+                <%= book.title %>
+              </option>
+              <% } else { %>
+              <option value="<%= book._id %>"><%= book.title %></option>
+              <% } %> <% } %>
+            </select>
+          </div>
+          <div class="form-group">
+            <% const imp = (typeof book_instance === 'undefined') ? '' :
+            book_instance.imprint; %>
+            <label for="imprint">Imprint: </label>
+            <input
+              id="imprint"
+              class="form-control"
+              type="text"
+              placeholder="Publisher and date information"
+              name="imprint"
+              required="true"
+              value="<%= imp %>"
+            />
+          </div>
+          <div class="form-group">
+            <% const d_back = (typeof book_instance === 'undefined' || typeof
+            book_instance.due_back === 'undefined') ? '' :
+            book_instance.due_back_yyyy_mm_dd; %>
+            <label for="due_back">Date when book available: </label>
+            <input
+              id="due_back"
+              class="form-control"
+              type="date"
+              placeholder="dd/mm/yyyy"
+              name="due_back"
+              value="<%= d_back %>"
+            />
+          </div>
+          <div class="form-group">
+            <label for="status">Status: </label>
+            <select
+              id="status"
+              class="form-control"
+              type="select"
+              placeholder="Select status"
+              name="status"
+              required="true"
+            >
+              <option value="Maintenance">Maintenance</option>
+              <option value="Available">Available</option>
+              <option value="Loaned">Loaned</option>
+              <option value="Reserved">Reserved</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+        <% if (typeof errors !== 'undefined') { %>
+        <ul>
+          <% for (let i = 0; i < errors.length; i++) { %>
+          <li class="text-danger"><%- errors[i].msg %></li>
+          <% } %>
+        </ul>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>
